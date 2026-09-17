@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Solution {
+    boolean safe(char[][] b, int r, int c, int n) {
+        for (int i = 0; i < n; i++)
+            if (b[r][i] == 'Q' || b[i][c] == 'Q') return false;
+
+        for (int i=r,j=c; i>=0 && j>=0; i--,j--)
+            if (b[i][j]=='Q') return false;
+
+        for (int i=r,j=c; i>=0 && j<n; i--,j++)
+            if (b[i][j]=='Q') return false;
+
+        return true;
+    }
+
+    void solve(char[][] b,int r,int n,List<List<String>> ans) {
+        if(r==n) {
+            List<String> x=new ArrayList<>();
+            for(char[] row:b) x.add(new String(row));
+            ans.add(x);
+            return;
+        }
+
+        for(int c=0;c<n;c++) {
+            if(safe(b,r,c,n)) {
+                b[r][c]='Q';
+                solve(b,r+1,n,ans);
+                b[r][c]='.';
+            }
+        }
+    }
+
+    public List<List<String>> solveNQueens(int n) {
+        char[][] b=new char[n][n];
+        for(char[] r:b) Arrays.fill(r,'.');
+
+        List<List<String>> ans=new ArrayList<>();
+        solve(b,0,n,ans);
+        return ans;
+    }
+}
