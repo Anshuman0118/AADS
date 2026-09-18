@@ -1,0 +1,37 @@
+class Solution {
+    public int totalNQueens(int n) {
+        int allPositions = (1 << n) - 1;
+        return backtrack(
+            allPositions,
+            0,
+            0,
+            0
+        );
+    }
+    private int backtrack(
+            int allPositions,
+            int columns,
+            int diagonal1,
+            int diagonal2) {
+        if (columns == allPositions) {
+            return 1;
+        }
+        int available = allPositions
+                & ~(columns | diagonal1 | diagonal2);
+
+        int count = 0;
+
+        while (available != 0) {
+            int position = available & -available;
+            available -= position;
+            count += backtrack(
+                allPositions,
+                columns | position,
+                (diagonal1 | position) << 1,
+                (diagonal2 | position) >> 1
+            );
+        }
+
+        return count;
+    }
+}
